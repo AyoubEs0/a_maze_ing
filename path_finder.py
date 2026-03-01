@@ -1,11 +1,9 @@
 from collections import deque
-from typing import TYPE_CHECKING, Optional
-
-if TYPE_CHECKING:
-    from a_maze_ing import Maze
+from typing import Optional
+from a_maze_ing import Maze
 
 
-def shortest_path(maze: "Maze", entry: tuple[int, int], exit: tuple[int, int]
+def shortest_path(maze: Maze, entry: tuple[int, int], exit: tuple[int, int]
                   ) -> Optional[list[tuple[int, int]]]:
     queue = deque([entry])
     visited = set([entry])
