@@ -1,10 +1,17 @@
 from collections import deque
+from typing import TYPE_CHECKING, Optional
+
+if TYPE_CHECKING:
+    from a_maze_ing import Maze
 
 
-def shortest_path(maze, entry, exit):
+def shortest_path(maze: "Maze", entry: tuple[int, int], exit: tuple[int, int]
+                  ) -> Optional[list[tuple[int, int]]]:
     queue = deque([entry])
     visited = set([entry])
-    parent = {entry: None}
+    parent: dict[tuple[int, int], Optional[tuple[int, int]]] = {
+        entry: None
+    }
 
     directions = [
         ("N", 0, -1, 0),
@@ -18,7 +25,7 @@ def shortest_path(maze, entry, exit):
 
         if (x, y) == exit:
             path = []
-            current = exit
+            current: Optional[tuple[int, int]] = exit
             while current is not None:
                 path.append(current)
                 current = parent[current]

@@ -1,10 +1,18 @@
 import sys
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Optional
 
 
 class Config:
-    def __init__(self, height, width, entry, exit,
-                 perfect, output_file, seed, algorithm):
+    def __init__(
+            self,
+            height: int,
+            width: int,
+            entry: tuple[int, int],
+            exit: tuple[int, int],
+            perfect: bool,
+            output_file: str,
+            seed: Optional[int],
+            algorithm: str) -> None:
         self.height = height
         self.width = width
         self.entry = entry
@@ -63,7 +71,7 @@ def build_config_dict(lines: List[str]) -> Dict[str, str]:
 
 def validate_keys(config_dict: Dict[str, str]) -> None:
     required: set[str] = {"WIDTH", "HEIGHT", "ENTRY", "EXIT",
-                          "OUTPUT_FILE", "PERFECT", "SEED", "ALGORITHM"}
+                          "OUTPUT_FILE", "PERFECT", "ALGORITHM"}
     found = config_dict.keys()
     missing = required - found
     if missing:
@@ -151,7 +159,16 @@ def build_config(config_dict: Dict[str, str]) -> Config:
         print("Error: 'OUTPUT_FILE' must end with .txt")
         sys.exit(1)
 
-    seed = parse_int(config_dict["SEED"], "SEED")
+    seed_value = config_dict.get("SEED")
+    if seed_value is not None:
+        try:
+            seed = int(seed_value)
+        except ValueError:
+            print("Error: 'SEED' must be a valid integer.")
+            sys.exit(1)
+    else:
+        seed = 0
+
     algorithm = parse_algorithm(config_dict["ALGORITHM"])
 
     cfg = Config(height, width, entry, exit,
